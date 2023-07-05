@@ -6,13 +6,17 @@ using UnityEngine;
 
 public class KitchenGameManager : MonoBehaviour
 {
+	/** SINGLETON PATTERN **/
 	public static KitchenGameManager Instance { get; private set; }
 
-
+	// Event when Game State has changed
 	public event EventHandler OnStateChanged;
+	// Event when Game is Pause
 	public event EventHandler OnGamePaused;
+	// Event when Game is Unpaused
 	public event EventHandler OnGameUnpaused;
 
+	// State Type definition
 	private enum State
 	{
 		WaitingToStart,
@@ -21,9 +25,13 @@ public class KitchenGameManager : MonoBehaviour
 		GameOver
 	}
 
+	// Game State
 	private State state;
+	// Countdown to start the GamePlaying state
 	private float countdownToStartTimer = 3f;
+	// Amount of time left on GamePlaying state
 	private float gamePlayingTimer;
+	// Max amount of time the game can be on GamePlaying state
 	private float gamePlayingTimerMax = 180f;
 	private bool isGamePaused = false;
 
@@ -36,17 +44,19 @@ public class KitchenGameManager : MonoBehaviour
 
 	private void Start()
 	{
+		// Events subscription
 		GameInput.Instance.OnPauseAction += GameInput_OnPauseAction;
 		GameInput.Instance.OnInteractAction += GameInput_OnInteractAction;
 	}
 
 	private void Update()
 	{
+		// State Machine
 		switch (state)
 		{
 			case State.WaitingToStart:
-
 				break;
+
 			case State.CountdownToStart:
 				countdownToStartTimer -= Time.deltaTime;
 				if (countdownToStartTimer < 0)
@@ -56,6 +66,7 @@ public class KitchenGameManager : MonoBehaviour
 					OnStateChanged?.Invoke(this, EventArgs.Empty);
 				}
 				break;
+
 			case State.GamePlaying:
 				gamePlayingTimer -= Time.deltaTime;
 				if (gamePlayingTimer < 0)
@@ -64,6 +75,7 @@ public class KitchenGameManager : MonoBehaviour
 					OnStateChanged?.Invoke(this, EventArgs.Empty);
 				}
 				break;
+
 			case State.GameOver:
 				break;
 		}

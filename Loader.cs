@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public static class Loader
 {
+	// Game Scenes Type
 	public enum Scene
 	{
 		MainMenuScene,
@@ -12,6 +13,7 @@ public static class Loader
 		LoadingScene
 	}
 
+	// Scene to load after LoadingScene
 	private static Scene targetScene;
 
 	public static void Load(Scene targetScene)

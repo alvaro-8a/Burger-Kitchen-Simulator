@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class KitchenObject : MonoBehaviour
 {
+	// Reference to the KitchenObject Scriptable Object (Contains all the necessary references)
 	[SerializeField] private KitchenObjectSO kitchenObjectSO;
 
+	// Parent that holds the KitchenObject
 	private IKitchenObjectParent kitchenObjectParent;
 
 	public KitchenObjectSO GetKitchenObjectSO()
@@ -47,6 +49,7 @@ public class KitchenObject : MonoBehaviour
 
 	public bool TryGetPlate(out PlateKitchenObject plateKitchenObject)
 	{
+		// Check if this KitchenObject is a Plate
 		if (this is PlateKitchenObject)
 		{
 			plateKitchenObject = this as PlateKitchenObject;
@@ -61,6 +64,7 @@ public class KitchenObject : MonoBehaviour
 
 	public static KitchenObject SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenObjectParent kitchenObjectParent)
 	{
+		// Spawn KitchenObject
 		Transform kitchenObjectTransform = Instantiate(kitchenObjectSO.prefab);
 		KitchenObject kitchenObject = kitchenObjectTransform.GetComponent<KitchenObject>();
 		kitchenObject.SetKitchenObjectParent(kitchenObjectParent);

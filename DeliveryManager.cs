@@ -49,7 +49,6 @@ public class DeliveryManager : MonoBehaviour
 
 			if (KitchenGameManager.Instance.IsGamePlaying() && waitingRecipeSOList.Count < waitingRecipeMax && availablePickupPoints.Count > 0)
 			{
-				// AddRecipeToWaitingList();
 				GameObject customerSpawned = Instantiate(customer, customerSpawnPoint);
 				customerSpawned.transform.parent = null;
 			}
@@ -141,7 +140,6 @@ public class DeliveryManager : MonoBehaviour
 
 	public void RemoveAvailablePickupPoint(DeliveryCounter deliveryCounter)
 	{
-		// Debug.Log("Remove Available");
 		if (availablePickupPoints == null) return;
 
 		for (int i = 0; i < availablePickupPoints.Count; i++)
@@ -160,7 +158,6 @@ public class DeliveryManager : MonoBehaviour
 
 	public void AddCustomerToDeliveryCounter(DeliveryCounter deliveryCounter, CustomerAI customer)
 	{
-		// Debug.Log("New Dictionary item : " + deliveryCounter + " - " + customer);
 		customerInDeliveryCounter.Add(deliveryCounter, customer);
 	}
 

@@ -7,15 +7,22 @@ using UnityEngine.InputSystem;
 
 public class GameInput : MonoBehaviour
 {
+	// Constant to save Player Preferences
 	private const string PLAYER_PREFS_BINDINGS = "InputBindings";
 
+	/** SINGLETON PATTERN **/
 	public static GameInput Instance { get; private set; }
 
+	// Event when interact button is pressed
 	public event EventHandler OnInteractAction;
+	// Event when interact alternate button is pressed
 	public event EventHandler OnInteractAlternateAction;
+	// Event when pause button is pressed
 	public event EventHandler OnPauseAction;
+	// Event when key rebind is completed
 	public event EventHandler OnBindingRebind;
 
+	// Binding Type definition
 	public enum Binding
 	{
 		Move_Up,
@@ -30,6 +37,7 @@ public class GameInput : MonoBehaviour
 		Gamepad_Pause
 	}
 
+	// Player Input actions map
 	private PlayerInputActions playerInputActions;
 
 	private void Awake()
@@ -38,13 +46,17 @@ public class GameInput : MonoBehaviour
 
 		playerInputActions = new PlayerInputActions();
 
+		// Check if there is a previous Player Preference for input actions map
 		if (PlayerPrefs.HasKey(PLAYER_PREFS_BINDINGS))
 		{
+			// Load the Player Preference input actions map
 			playerInputActions.LoadBindingOverridesFromJson(PlayerPrefs.GetString(PLAYER_PREFS_BINDINGS));
 		}
 
+		// Enable the player input actions map
 		playerInputActions.Player.Enable();
 
+		// Events subscription
 		playerInputActions.Player.Interact.performed += Interact_performed;
 		playerInputActions.Player.InteractAlternate.performed += InteractAlternate_performed;
 		playerInputActions.Player.Pause.performed += Pause_performed;
@@ -53,10 +65,12 @@ public class GameInput : MonoBehaviour
 
 	private void OnDestroy()
 	{
+		// Events unsubscription
 		playerInputActions.Player.Interact.performed -= Interact_performed;
 		playerInputActions.Player.InteractAlternate.performed -= InteractAlternate_performed;
 		playerInputActions.Player.Pause.performed -= Pause_performed;
 
+		// Destroy the input actions map
 		playerInputActions.Dispose();
 	}
 
@@ -77,8 +91,10 @@ public class GameInput : MonoBehaviour
 
 	public Vector2 GetMovementVectorNormalized()
 	{
+		// Read the move input values
 		Vector2 inputVector = playerInputActions.Player.Move.ReadValue<Vector2>();
 
+		// Normalize the input
 		inputVector = inputVector.normalized;
 
 		return inputVector;
@@ -86,6 +102,7 @@ public class GameInput : MonoBehaviour
 
 	public string GetBindingText(Binding binding)
 	{
+		// Get the key name for the Binding Type
 		switch (binding)
 		{
 			default:
@@ -115,11 +132,15 @@ public class GameInput : MonoBehaviour
 
 	public void RebindBinding(Binding binding, Action onActionRebound)
 	{
+		// Disable the Player input actions map
 		playerInputActions.Player.Disable();
 
+		// Input action
 		InputAction inputAction;
+		// Position of the binding in the input action keys array
 		int bindingIndex;
 
+		// Set the inputAction and bindingIndex for the Binding Type
 		switch (binding)
 		{
 			default:
@@ -166,16 +187,21 @@ public class GameInput : MonoBehaviour
 				break;
 		}
 
+		// Rebind the Binding Type
 		inputAction.PerformInteractiveRebinding(bindingIndex)
 			.OnComplete(callback =>
 			{
 				callback.Dispose();
+				// Enable the Player input actions
 				playerInputActions.Player.Enable();
+				// Call received Action
 				onActionRebound();
 
+				// Save Player Preference for the new Binding
 				PlayerPrefs.SetString(PLAYER_PREFS_BINDINGS, playerInputActions.SaveBindingOverridesAsJson());
 				PlayerPrefs.Save();
 
+				// Invoke event to update the keys binding in the tutorialUI
 				OnBindingRebind?.Invoke(this, EventArgs.Empty);
 			})
 			.Start();

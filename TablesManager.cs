@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class TablesManager : MonoBehaviour
 {
+	/** SINGLETON PATTERN **/
 	public static TablesManager Instance { get; private set; }
 
+	// Tables on game screen
 	[SerializeField] private List<Table> tables;
 
+	// Available Tables to Eat
 	private List<Table> availableTables;
+	// Which customer is on each table
 	private Dictionary<Table, CustomerAI> customerInTable;
 
 	private void Awake()
@@ -22,8 +26,6 @@ public class TablesManager : MonoBehaviour
 		{
 			availableTables.Add(table);
 		}
-
-		Debug.Log("Available Tables: " + availableTables.Count);
 	}
 
 	public List<Table> GetAvailableTables()

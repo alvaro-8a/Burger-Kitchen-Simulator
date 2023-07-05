@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
+	// Constant to save Player Preferences
 	private const string PLAYER_PREFS_SOUND_EFFECTS_VOLUME = "SoundEffectsVolume";
 
+	/** SINGLETON PATTERN **/
 	public static SoundManager Instance { get; private set; }
 
+	// Reference to a Scriptable Object with the audio clips references
 	[SerializeField] private AudioClipRefsSO audioClipRefsSO;
 
 	private float volume = 1f;
@@ -16,11 +19,13 @@ public class SoundManager : MonoBehaviour
 	{
 		Instance = this;
 
+		// Get previous Player Preferences
 		volume = PlayerPrefs.GetFloat(PLAYER_PREFS_SOUND_EFFECTS_VOLUME, 1f);
 	}
 
 	private void Start()
 	{
+		// Events subscription
 		DeliveryManager.Instance.OnRecipeSuccess += DeliveryManager_OnRecipeSuccess;
 		DeliveryManager.Instance.OnRecipeFailed += DeliveryManager_OnRecipeFailed;
 		CuttingCounter.OnAnyCut += CuttingCounter_OnAnyCut;
@@ -98,6 +103,7 @@ public class SoundManager : MonoBehaviour
 			volume = 0f;
 		}
 
+		// Save Player Preferences
 		PlayerPrefs.SetFloat(PLAYER_PREFS_SOUND_EFFECTS_VOLUME, volume);
 		PlayerPrefs.Save();
 	}

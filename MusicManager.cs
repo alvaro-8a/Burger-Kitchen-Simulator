@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class MusicManager : MonoBehaviour
 {
+	// Constant to save Player Preferences
 	private const string PLAYER_PREFS_MUSIC_VOLUME = "MusicVolume";
 
+	/** SINGLETON PATTERN **/
 	public static MusicManager Instance { get; private set; }
 
 	private AudioSource audioSource;
@@ -17,6 +19,7 @@ public class MusicManager : MonoBehaviour
 
 		audioSource = GetComponent<AudioSource>();
 
+		// Get previous Player Preferences
 		volume = PlayerPrefs.GetFloat(PLAYER_PREFS_MUSIC_VOLUME, .3f);
 		audioSource.volume = volume;
 	}

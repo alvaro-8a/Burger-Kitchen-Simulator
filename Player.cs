@@ -5,26 +5,32 @@ using System;
 
 public class Player : MonoBehaviour, IKitchenObjectParent
 {
-	// SINGLETON PATTERN
+	/** SINGLETON PATTERN **/
 	public static Player Instance { get; private set; }
 
 
-	// EVENTS
+	// Event when player picks a KitchenObject
 	public event EventHandler OnPickedSomething;
+	// Event when player looks/selects a Counter
 	public event EventHandler<OnSelectedCounterChangedEventArgs> OnSelectedCounterChanged;
+	// Event Arguments for OnSelectedCounterChanged Event
 	public class OnSelectedCounterChangedEventArgs : EventArgs
 	{
 		public BaseCounter selectedCounter;
 	}
 
+	// Reference to the GameInput manager
 	[SerializeField] private GameInput gameInput;
 	[SerializeField] private float moveSpeed = 7f;
 	[SerializeField] private float rotateSpeed = 10f;
+	// LayerMask for interactive counters
 	[SerializeField] private LayerMask countersLayerMask;
+	// Position to hold KitchenObjects
 	[SerializeField] private Transform kitchenObjectHoldPoint;
 
 
 	private bool isWalking;
+	// Interaction Direction to RayCast
 	private Vector3 lastInteractDir;
 	private BaseCounter selectedCounter;
 	private KitchenObject kitchenObject;
@@ -40,6 +46,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
 	private void Start()
 	{
+		// Interactions events subscription
 		gameInput.OnInteractAction += GameInput_OnInteractAction;
 		gameInput.OnInteractAlternateAction += GameInput_OnInteractAlternateAction;
 	}
@@ -76,21 +83,29 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
 	private void HandleMovement()
 	{
+		// Get Player Input
 		Vector2 inputVector = gameInput.GetMovementVectorNormalized();
 
+		// Remove movement in Y axis
 		Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
 
 		float moveDistance = moveSpeed * Time.deltaTime;
 		float playerRadius = .7f;
 		float playerHeight = 2f;
+
+		// Check if player is not blocked to move
 		bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDir, moveDistance);
 
 		if (!canMove)
 		{
-			//Cannot move torward moveDir
+			// Cannot move torward moveDir
+
+			// Check if Player is stucked in a diagonal movement (Keyboard or Gamepad)
+			// If stucked in diagonal move => Try to move only on one axis (X or Z)
 
 			// Attempt only X movement
 			Vector3 moveDirX = new Vector3(moveDir.x, 0, 0).normalized;
+			// Check if can move on X axis only
 			canMove = (moveDir.x < -.5f || moveDir.x > .5f) && !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirX, moveDistance);
 
 			if (canMove)
@@ -101,6 +116,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 			{
 				// Attempt only Z Movement
 				Vector3 moveDirZ = new Vector3(0, 0, moveDir.z).normalized;
+				// Check if can move on Z axis only
 				canMove = (moveDir.z < -.5f || moveDir.z > .5f) && !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight, playerRadius, moveDirZ, moveDistance);
 
 				if (canMove)
@@ -116,27 +132,33 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 		isWalking = moveDir != Vector3.zero;
 
 		if (isWalking)
+		{
+			// Rotate player
 			transform.forward = Vector3.Slerp(transform.forward, moveDir, Time.deltaTime * rotateSpeed);
+		}
 	}
 
 	private void HandleInteractions()
 	{
+		// Get Player Input
 		Vector2 inputVector = gameInput.GetMovementVectorNormalized();
 
+		// Remove movement in Y axis
 		Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
 
 		if (moveDir != Vector3.zero)
 		{
+			// Set new interaction direction to the Player looking position
 			lastInteractDir = moveDir;
 		}
 
 		float interactDistance = 2f;
+		// Check if raycast in the Interaction Direction hits something
 		if (Physics.Raycast(transform.position, lastInteractDir, out RaycastHit raycastHit, interactDistance, countersLayerMask))
 		{
+			// If Counter is hit => select the counter
 			if (raycastHit.transform.TryGetComponent(out BaseCounter baseCounter))
 			{
-				// Has ClearCounter
-				//clearCounter.Interact();
 				if (baseCounter != selectedCounter)
 				{
 					SetSelectedCounter(baseCounter);
@@ -157,6 +179,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 	{
 		this.selectedCounter = selectedCounter;
 
+		// Invoke Event to change the Counter Visual
 		OnSelectedCounterChanged?.Invoke(this, new OnSelectedCounterChangedEventArgs
 		{
 			selectedCounter = selectedCounter
