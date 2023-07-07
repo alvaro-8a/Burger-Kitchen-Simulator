@@ -35,8 +35,11 @@ public class DeliveryManager : MonoBehaviour
 	private float spawnCustomerTimerMax = 4f;
 	// Max amount of recipes on waiting list
 	private int waitingRecipeMax = 4;
+	// Amount of recipes successfully delivered
 	private int successfulRecipesAmount;
+	// List of available delivery points
 	private List<DeliveryCounter> availablePickupPoints;
+	// Relation to know which customer is in each delivery counter
 	private Dictionary<DeliveryCounter, CustomerAI> customerInDeliveryCounter;
 
 	private void Awake()
@@ -68,20 +71,28 @@ public class DeliveryManager : MonoBehaviour
 		}
 	}
 
+	// This methods manages the delivery of a recipe by the player
+	// It checks if the delivery is successful or failed and invokes the respectives events
+	// @param plateKitchenObject: Plate that contains the recipe to deliver
+	// @param deliveryCounter: DeliveryCounter that wants to deliver the recipe
 	public void DeliverRecipe(PlateKitchenObject plateKitchenObject, DeliveryCounter deliveryCounter)
 	{
 		for (int i = 0; i < waitingRecipeSOList.Count; i++)
 		{
+			// Cycling through the waiting recipes list
 			RecipeSO waitingRecipeSO = waitingRecipeSOList[i];
 
+			// Check if the the waiting recipe has the same number of ingredients as the plate to deliver
 			if (waitingRecipeSO.kitchenObjectSOList.Count == plateKitchenObject.GetKitchenObjectSOList().Count)
 			{
-				bool plateContentsMatchesRecipe = true;
 				// Has same number of ingredients
+				bool plateContentsMatchesRecipe = true;
+
 				foreach (KitchenObjectSO recipeKitchenObjectSO in waitingRecipeSO.kitchenObjectSOList)
 				{
+					// Cycling through ingredients in the Recipe 
 					bool ingredientFound = false;
-					// Cycling through ingredients in the Recipe
+
 					foreach (KitchenObjectSO plateKitchenObjectSO in plateKitchenObject.GetKitchenObjectSOList())
 					{
 						// Cycling through ingredients in the Plate
