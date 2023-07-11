@@ -139,9 +139,9 @@ public class DeliveryManager : MonoBehaviour
 
 	public void AddRecipeToWaitingList()
 	{
+		// Choose a random recipe from the list of recipes
 		RecipeSO waitingRecipeSO = recipeListSO.recipeSOList[UnityEngine.Random.Range(0, recipeListSO.recipeSOList.Count)];
 
-		// Debug.Log(waitingRecipeSO.recipeName);
 		waitingRecipeSOList.Add(waitingRecipeSO);
 
 		OnRecipeSpawned?.Invoke(this, EventArgs.Empty);

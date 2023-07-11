@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class ClearCounter : BaseCounter
 {
-	[SerializeField] protected KitchenObjectSO kitchenObjectSO;
-
 	public override void Interact(Player player)
 	{
 		// No KitchenObject in Counter

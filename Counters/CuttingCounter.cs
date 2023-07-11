@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class CuttingCounter : BaseCounter, IHasProgress
 {
+	// Global event when Player cuts an ingredient on any CuttingCounter
 	public static event EventHandler OnAnyCut;
 
 	new public static void ResetStaticData()
@@ -12,13 +13,18 @@ public class CuttingCounter : BaseCounter, IHasProgress
 		OnAnyCut = null;
 	}
 
+	// Event when an ingredient cutting progresses
 	public event EventHandler<IHasProgress.OnProgressChangedEventArgs> OnProgressChanged;
+	// Event when cut action is executed 
 	public event EventHandler OnCut;
 
+	// Reference to a List of cutting recipes. Ingrediente in (cut) => ingredient output
 	[SerializeField] private CuttingRecipeSO[] cuttingRecipeSOArray;
 
+	// Progress cutting the KitchenObject (ingredient)
 	private int cuttingProgress;
 
+	// Player interacts with Counter
 	public override void Interact(Player player)
 	{
 		if (!HasKitchenObject())
@@ -63,6 +69,7 @@ public class CuttingCounter : BaseCounter, IHasProgress
 		}
 	}
 
+	// Player interacts (to cut) with CuttingCounter
 	public override void InteractAlternate(Player player)
 	{
 		if (HasKitchenObject())
@@ -92,6 +99,7 @@ public class CuttingCounter : BaseCounter, IHasProgress
 		}
 	}
 
+	// Check if we have a cutting recipe for the KitchenObject (ingredient)
 	private bool HasRecipeWithInput(KitchenObjectSO inputKitchenObjectSO)
 	{
 		CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSOWithInput(inputKitchenObjectSO);
@@ -99,6 +107,7 @@ public class CuttingCounter : BaseCounter, IHasProgress
 		return cuttingRecipeSO != null;
 	}
 
+	// Get the KitchenObject (ingredient) output if the KitchenObject (ingredient) input is cut
 	private KitchenObjectSO GetOutputForInput(KitchenObjectSO inputKitchenObjectSO)
 	{
 		CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSOWithInput(inputKitchenObjectSO);
@@ -111,6 +120,7 @@ public class CuttingCounter : BaseCounter, IHasProgress
 		return null;
 	}
 
+	// Get the cuttingRecipe for the KitchenObject (ingredient) input 
 	private CuttingRecipeSO GetCuttingRecipeSOWithInput(KitchenObjectSO inputKitchenObjectSO)
 	{
 		foreach (CuttingRecipeSO cuttingRecipeSO in cuttingRecipeSOArray)

@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class PlayerSounds : MonoBehaviour
 {
+	// Player Reference
 	private Player player;
+	// Time left to play footstep sound
 	private float footstepTimer;
+	// Time between footstep sound
 	private float footstepTimerMax = .1f;
 
 	private void Awake()
@@ -21,6 +24,7 @@ public class PlayerSounds : MonoBehaviour
 		{
 			footstepTimer = footstepTimerMax;
 
+			// Check if player is walking
 			if (player.IsWalking())
 			{
 				float volume = 1f;

@@ -5,8 +5,10 @@ using UnityEngine;
 
 public class ContainerCounter : BaseCounter
 {
+	// Event when Player grabs the KitchenObject from the ContainerCounter
 	public event EventHandler OnPlayerGrabbedObject;
 
+	// KitchenObject (as Scriptable Object) to spawn in this ContainerCounter
 	[SerializeField] protected KitchenObjectSO kitchenObjectSO;
 
 	public override void Interact(Player player)

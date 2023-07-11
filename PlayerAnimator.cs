@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class PlayerAnimator : MonoBehaviour
 {
+	// Constant reference to animator variable
 	private const string IS_WALKING = "IsWalking";
 
+	// Player reference
 	[SerializeField] private Player player;
 
 	private Animator animator;

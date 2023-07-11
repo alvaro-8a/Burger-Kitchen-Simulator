@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class BaseCounter : MonoBehaviour, IKitchenObjectParent
 {
+	// Global event when a KitchenObject is placed in any Counter
 	public static event EventHandler OnAnyObjectPlacedHere;
 
 	public static void ResetStaticData()
@@ -12,9 +13,10 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
 		OnAnyObjectPlacedHere = null;
 	}
 
-
+	// KitchenObject placed position
 	[SerializeField] private Transform counterTopPoint;
 
+	// KitchenObject in the Counter
 	private KitchenObject kitchenObject;
 
 
@@ -28,11 +30,13 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
 		// Debug.LogError("BaseCounter.InteractAlternate();");
 	}
 
+	// Get KitchenObject place position 
 	public Transform GetKitchenObjectFollowTransform()
 	{
 		return counterTopPoint;
 	}
 
+	// Put the KitchenObject in this Counter
 	public void SetKitchenObject(KitchenObject kitchenObject)
 	{
 		this.kitchenObject = kitchenObject;
