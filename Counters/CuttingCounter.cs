@@ -41,6 +41,7 @@ public class CuttingCounter : BaseCounter, IHasProgress
 
 					CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
 
+					// Invoke event to update the progress bar of the cut action
 					OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArgs
 					{
 						progressNormalized = (float)cuttingProgress / cuttingRecipeSO.cuttingProgressMax
